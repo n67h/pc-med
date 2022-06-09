@@ -1,0 +1,171 @@
+*{
+	margin: 0;
+	padding: 0;
+	font-family: 'nunito',sans-serif;
+}
+body{
+	background-image:linear-gradient(rgba(4, 9, 30,0.7),rgba(4, 9, 30, 0.7)),url(../images/bg.jpg);
+}
+.login-form{
+	background-color: #fff;
+	position: relative;
+	width: 20rem;
+	height: 25rem;
+	margin: 6% auto;
+	box-shadow: 5px 10px #d1e0e0;
+	border-radius: 20px;
+}
+.title{
+	font-size: 35px;
+	margin-left: 4rem;
+	margin-bottom: 30px;
+}
+.label{
+	font-size: 20px;
+}
+.input-fields{
+	margin-top: 12px;
+	margin-left: 20px;
+
+}
+.input{
+	border-top: none;
+	border-left: none;
+	border-right: none;
+	border-bottom: 2px solid black;
+	width: 80%;
+	outline: none;
+	font-size: 17px;
+
+}
+.forgot{
+margin-left: 30%;
+text-decoration: none;
+color: #555;
+
+}
+.forgot:hover{
+	text-decoration: underline;
+}
+.submit{
+	padding: 10px 40px;
+	margin-left: 30%;
+	font-size: 15px;
+	border-radius: 20px;
+	border: none;
+	cursor: pointer;
+	background-color: black;
+	color: #fff;
+	transition: 0.2s;
+}
+.submit:hover{
+	text-decoration: underline;
+}
+.submit:active{
+	opacity: 0.8;
+}
+.create-acc{
+margin-left: 30%;
+text-decoration: none;
+color: #555;
+}
+.create-acc:hover{
+	text-decoration: underline;
+}
+
+
+/*REGISTER*/
+
+
+/*========== CUSTOM CSS ==========*/
+table, th, td {
+    border: 1px solid black;
+    border-collapse: collapse;
+}
+
+a {
+    text-decoration: none;
+    color: black;
+}
+
+a:hover {
+    color: black;
+}
+
+.unread {
+	cursor: pointer;
+	background-color: #f4f4f4;
+}
+
+.messages-box {
+	max-height: 28rem;
+	overflow: auto;
+}
+
+.online-circle {
+	border-radius: 5rem;
+	width: 5rem;
+	height: 5rem;
+}
+
+.messages-title {
+	float: right;
+	margin: 0px 5px;
+}
+
+.message-img {
+	float: right;
+	margin: 0px 5px;
+}
+
+.message-header {
+	text-align: right;
+	width: 100%;
+	margin-bottom: 0.5rem;
+}
+
+.text-editor {
+	min-height: 18rem;
+}
+
+.messages-list li.messages-you .messages-title {
+	float: left;
+}
+
+.messages-list li.messages-you .message-img {
+	float: left;
+}
+
+.messages-list li.messages-you p {
+	float: left;
+	text-align: left;
+}
+
+.messages-list li.messages-you .message-header {
+	text-align: left;
+}
+
+.messages-list li p {
+	max-width: 60%;
+	padding: 5px;
+	border: #e6e7e9 1px solid;
+}
+
+.messages-list li.messages-me p {
+	float: right;
+}
+
+.ql-editor p {
+	font-size: 1rem;
+}  
+
+.container {
+	margin-right: 0;
+	float: right;
+	margin-bottom: 0;
+}
+
+.card {
+	margin-right: 0;
+	float: right;
+}

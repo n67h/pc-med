@@ -1,0 +1,8 @@
+*{
+	margin: 0;
+	padding: 0;
+	font-family: 'nunito',sans-serif;
+}
+body{
+	background-image:linear-gradient(rgba(4, 9, 30,0.7),rgba(4, 9, 30, 0.7)),url(../images/bg.jpg);
+}

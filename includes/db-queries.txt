@@ -1,0 +1,405 @@
+sql_mode=NO_ZERO_IN_DATE,NO_ZERO_DATE,NO_ENGINE_SUBSTITUTION
+
+user: chatbot123
+pass: chatbot123
+
+user: andrepaul.staclara67@gmail.com
+pass: qweqweqwe
+
+
+CREATE TABLE user_roles (
+	user_role_id int(11) PRIMARY KEY NOT NULL AUTO_INCREMENT,
+    role varchar(25) NOT NULL,
+    description varchar(255) NOT NULL,
+    date_added timestamp DEFAULT CURRENT_TIMESTAMP,
+    last_updated timestamp DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+ALTER TABLE user_roles CHANGE last_created last_updated timestamp DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP;
+ALTER TABLE user_roles DROP COLUMN is_deleted;
+ALTER TABLE user_roles CHANGE date_created date_added timestamp DEFAULT CURRENT_TIMESTAMP;
+
+INSERT INTO user_roles (role, description) VALUES
+	('Customer', 'Lorem ipsum dolor sit amet consectetur'),
+    ('Staff', 'Lorem ipsum dolor sit amet consectetur'),
+	('Admin', 'Lorem ipsum dolor sit amet consectetur'),
+    ('Bot', 'Lorem ipsum dolor sit amet consectetur');
+
+
+CREATE TABLE users (
+    user_id int(11) PRIMARY KEY NOT NULL AUTO_INCREMENT,
+    email varchar(50) NOT NULL,
+    f_name varchar(25) NOT NULL,
+    l_name varchar(25) NOT NULL,
+    phone_no varchar(25) NOT NULL,
+    address varchar(128) NOT NULL,
+    password varchar(255) NOT NULL,
+    user_role_id int(11) DEFAULT 1,
+    profile_img tinyint NOT NULL DEFAULT 0,
+    verification_key varchar(50),
+    is_verified tinyint NOT NULL DEFAULT 0,
+    is_deleted tinyint NOT NULL DEFAULT 0,
+    date_added timestamp DEFAULT CURRENT_TIMESTAMP,
+    last_updated timestamp DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    last_login timestamp,
+    
+    FOREIGN KEY(user_role_id) REFERENCES user_roles(user_role_id)
+    ON DELETE SET NULL ON UPDATE CASCADE
+);
+ALTER TABLE users ADD UNIQUE (email);
+ALTER TABLE users DROP COLUMN birthdate;
+ALTER TABLE users DROP COLUMN gender;
+ALTER TABLE users CHANGE date_created date_added timestamp DEFAULT CURRENT_TIMESTAMP;
+
+
+CREATE TABLE password_reset (
+	password_reset_id int(11) PRIMARY KEY AUTO_INCREMENT NOT NULL,
+    password_reset_email text NOT NULL,
+    password_reset_selector text NOT NULL,
+    password_reset_token longtext NOT NULL,
+    password_reset_expires text NOT NULL
+);
+
+
+CREATE TABLE chatbot (
+	id int(11) PRIMARY KEY NOT NULL AUTO_INCREMENT,
+    question varchar(255) NOT NULL,
+    reply varchar(255) NOT NULL
+);
+ALTER TABLE chatbot CHANGE id chatbot_id int(11) NOT NULL AUTO_INCREMENT;
+
+INSERT INTO chatbot (question, reply) VALUES
+	('Hi||Hello||Hola', 'Hello, putanginamo'),
+	('How are you', 'Estoy bien y tu?'),
+    ('Where are you from', 'Philippines'),
+
+
+CREATE TABLE messages (
+	message_id int(11) PRIMARY KEY NOT NULL AUTO_INCREMENT,
+    user_id int(11),
+    user_role_id int(11),
+    message text NOT NULL,
+    date_added timestamp DEFAULT CURRENT_TIMESTAMP,
+    
+    FOREIGN KEY(user_id) REFERENCES users(user_id) ON DELETE SET NULL ON UPDATE CASCADE,
+    FOREIGN KEY(user_role_id) REFERENCES user_roles(user_role_id) ON DELETE SET NULL ON UPDATE CASCADE
+);
+ALTER TABLE messages CHANGE date_created date_added timestamp DEFAULT CURRENT_TIMESTAMP;
+
+
+CREATE TABLE product_category (
+	product_category_id int(11) PRIMARY KEY NOT NULL AUTO_INCREMENT,
+    name varchar(255) NOT NULL,
+    description text NOT NULL,
+    date_added timestamp DEFAULT CURRENT_TIMESTAMP,,
+    last_updated timestamp DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+ALTER TABLE product_category CHANGE date_created date_added timestamp DEFAULT CURRENT_TIMESTAMP;
+
+INSERT INTO product_category (name, description) VALUES
+	('Monitor', 'Lorem ipsum dolor sit amet consectetur'),
+    ('Keyboard', 'Lorem ipsum dolor sit amet consectetur'),
+    ('GPU', 'Lorem ipsum dolor sit amet consectetur'),
+    ('Motherboard', 'Lorem ipsum dolor sit amet consectetur'),
+    ('Mouse', 'Lorem ipsum dolor sit amet consectetur');
+
+
+CREATE TABLE product (
+	product_id int(11) PRIMARY KEY NOT NULL AUTO_INCREMENT,
+    product_category_id int(11),
+    name varchar(255) NOT NULL,
+    image varchar(255) NOT NULL,
+    specification text NOT NULL,
+    price decimal(9,2) NOT NULL,
+    quantity smallint(6) NOT NULL,
+    sold smallint(6) NOT NULL DEFAULT 0,
+    available smallint(6) NOT NULL DEFAULT (`quantity`),
+    warranty varchar(50) NOT NULL,
+    date_added timestamp DEFAULT CURRENT_TIMESTAMP,
+    last_updated timestamp DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    
+    FOREIGN KEY(product_category_id) REFERENCES product_category(product_category_id) ON DELETE CASCADE ON UPDATE CASCADE
+);
+ALTER TABLE product CHANGE date_created date_added timestamp DEFAULT CURRENT_TIMESTAMP;
+
+
+CREATE TABLE cart (
+	cart_id int(11) PRIMARY KEY NOT NULL AUTO_INCREMENT,
+    user_id int(11) NOT NULL,
+    product_id int(11) NOT NULL,
+    quantity int(11) NOT NULL,
+    date_added timestamp DEFAULT CURRENT_TIMESTAMP,
+    last_updated timestamp DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    
+    FOREIGN KEY(user_id) REFERENCES users(user_id) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY(product_id) REFERENCES product(product_id) ON DELETE CASCADE ON UPDATE CASCADE
+);
+ALTER TABLE cart CHANGE date_created date_added timestamp DEFAULT CURRENT_TIMESTAMP;
+
+
+CREATE VIEW cart_details AS
+SELECT cart.cart_id, cart.user_id, cart.product_id, product.image, product.name, cart.quantity, product.price, product.price * cart.quantity AS total_price, cart.date_added FROM product INNER JOIN cart USING (product_id);
+
+CREATE TABLE orders (
+    order_id int(11) PRIMARY KEY NOT NULL AUTO_INCREMENT,
+    order_details_id int(11) NOT NULL,
+    product_id int(11) NOT NULL,
+	quantity smallint(6) NOT NULL,
+    is_deleted tinyint NOT NULL DEFAULT 0,
+	date_added timestamp DEFAULT CURRENT_TIMESTAMP,
+    
+    FOREIGN KEY(order_details_id) REFERENCES order_details(order_details_id) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY(product_id) REFERENCES product(product_id) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+CREATE TABLE order_details (
+    order_details_id int(11) PRIMARY KEY NOT NULL AUTO_INCREMENT,
+    user_id int(11) NOT NULL,
+    total decimal(9,2) NOT NULL,
+    shipping_fee decimal(6,2),
+    subtotal decimal(9,2) NOT NULL,
+    address varchar(128) NOT NULL,
+    zipcode varchar(20) NOT NULL,
+    instructions text,
+    delivery_method varchar(20) NOT NULL,
+    payment tinyint NOT NULL DEFAULT 0,
+    order_status varchar(50) NOT NULL DEFAULT 'Pending',
+    is_read tinyint NOT NULL DEFAULT 0,
+    is_deleted tinyint NOT NULL DEFAULT 0,
+    date_added timestamp DEFAULT CURRENT_TIMESTAMP,
+	last_updated timestamp DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+
+    FOREIGN KEY(user_id) REFERENCES users(user_id) ON DELETE CASCADE ON UPDATE CASCADE
+);
+ALTER TABLE order_details AUTO_INCREMENT = 2347;
+
+CREATE TABLE payment_details (
+    pd_id int(11) PRIMARY KEY NOT NULL AUTO_INCREMENT,
+    order_details_id int(11) NOT NULL,
+    transaction_id varchar(50) NOT NULL,
+    email varchar(50) NOT NULL,
+    fullname varchar(128) NOT NULL,
+    payer_id varchar(50) NOT NULL,
+    amount_paid varchar(50) NOT NULL,
+    is_deleted tinyint NOT NULL DEFAULT 0,
+	date_added timestamp DEFAULT CURRENT_TIMESTAMP,
+
+    FOREIGN KEY(order_details_id) REFERENCES order_details(order_details_id) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+
+CREATE VIEW ordered_product AS
+SELECT orders.order_details_id, product.image, product.name, product.price, product.price * orders.quantity AS total_price, order_details.shipping_fee, order_details.subtotal, orders.quantity, orders.is_deleted, orders.date_added FROM product INNER JOIN orders USING (product_id) INNER JOIN order_details USING (order_details_id);
+
+
+SELECT MONTHNAME(order_details.date_added) FROM order_details;
+SELECT MONTH(order_details.date_added) FROM order_details;
+
+SELECT MONTHNAME(date_added) AS month, COUNT(*) AS orders FROM order_details GROUP BY MONTHNAME(date_added);
+
+SELECT DATE_ADD(DATE(date_added), INTERVAL (7 - DAYOFWEEK(date_added)) DAY) AS week, COUNT(*) AS orders FROM order_details GROUP BY week;
+
+SELECT product_category.name AS category, SUM(orders.quantity) AS sold FROM product
+INNER JOIN orders USING (product_id) INNER JOIN product_category USING (product_category_id) GROUP BY category ORDER BY sold DESC;
+
+SELECT product.product_category_id AS category, COUNT(product.product_category_id) AS most_sold FROM product INNER JOIN orders USING (product_id) GROUP BY category ORDER BY most_sold DESC;
+
+SELECT product_id, SUM(quantity) AS most_ordered FROM orders GROUP BY (product_id) ORDER BY (most_ordered) DESC LIMIT 6;
+
+SELECT product.product_category_id AS category, SUM(orders.quantity) AS most_sold FROM product INNER JOIN orders USING (product_id) GROUP BY category ORDER BY most_sold DESC;
+
+SELECT SUM(total) AS total FROM order_details WHERE is_deleted != 1;
+
+SELECT order_details_id FROM order_details ORDER BY last_updated DESC LIMIT 1;
+
+SELECT * FROM order_details ORDER BY order_details_id DESC;
+
+CREATE TABLE feedback (
+	feedback_id int(11) NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    user_id int(11) NOT NULL,
+    feedback text NOT NULL,
+    is_deleted tinyint NOT NULL DEFAULT 0,
+    date_added timestamp DEFAULT CURRENT_TIMESTAMP,
+    
+    FOREIGN KEY(user_id) REFERENCES users(user_id) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+SELECT users.f_name, users.l_name, users.email, contact.* FROM users INNER JOIN contact USING (user_id);
+
+CREATE TABLE service (
+	service_id int(11) NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    service varchar(50) NOT NULL,
+    price decimal(6,2) NOT NULL,
+    date_added timestamp DEFAULT CURRENT_TIMESTAMP,
+	last_updated timestamp DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+CREATE TABLE service_reservation (
+	sr_id int(11) NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    user_id int(11) NOT NULL,
+    service_id int(11) NOT NULL,
+    address varchar(255) NOT NULL,
+    zipcode varchar(20) NOT NULL,
+    service_date date NOT NULL,
+    service_time time NOT NULL,
+    instructions text,
+    status varchar(50) NOT NULL DEFAULT 'Pending',
+    is_deleted tinyint NOT NULL DEFAULT 0,
+    date_added timestamp DEFAULT CURRENT_TIMESTAMP,
+	last_updated timestamp DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+	
+    FOREIGN KEY(user_id) REFERENCES users(user_id) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY(service_id) REFERENCES service(service_id) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+
+CREATE TABLE shipping_fee (
+	sf_id int(11) NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    destination varchar(50) NOT NULL,
+    city varchar(50) NOT NULL,
+    shipping_fee int(11) NOT NULL,
+    date_added timestamp DEFAULT CURRENT_TIMESTAMP,
+	last_updated timestamp DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+INSERT INTO shipping_fee (destination, city, shipping_fee) VALUES 
+	('Luzon', 'Alaminos', 190),
+    ('Luzon', 'Angeles', 190),
+    ('Luzon', 'Antipolo', 190),
+    ('Luzon', 'Bacoor', 190),
+    ('Luzon', 'Baguio', 190),
+    ('Luzon', 'Balanga', 190),
+    ('Luzon', 'Batac', 190),
+    ('Luzon', 'Batangas', 190),
+    ('Luzon', 'Biñan', 190),
+    ('Luzon', 'Cabanatuan', 190),
+    ('Luzon', 'Cabuyao', 190),
+    ('Luzon', 'Calamba', 190),
+    ('Metro Manila', 'Caloocan', 155),
+    ('Luzon', 'Candon', 190),
+    ('Luzon', 'Cauayan', 190),
+    ('Luzon', 'Cavite', 190),
+    ('Luzon', 'Dagupan', 190),
+    ('Luzon', 'Dasmariñas', 190),
+    ('Luzon', 'Gapan', 190),
+    ('Luzon', 'General Trias', 190),
+    ('Luzon', 'Ilagan', 190),
+    ('Luzon', 'Imus', 190),
+    ('Luzon', 'Iriga', 190),
+    ('Luzon', 'Laoag', 190),
+    ('Metro Manila', 'Las Piñas', 155),
+    ('Luzon', 'Legazpi', 190),
+    ('Luzon', 'Ligao', 190),
+    ('Luzon', 'Lipa', 190),
+    ('Luzon', 'Lucena', 190),
+    ('Luzon', 'Mabalacat', 190),
+    ('Metro Manila', 'Makati', 155),
+    ('Metro Manila', 'Malabon', 155),
+    ('Luzon', 'Malolos', 190),
+    ('Metro Manila', 'Mandaluyong', 155),
+    ('Metro Manila', 'Manila', 155),
+    ('Metro Manila', 'Marikina', 155),
+    ('Luzon', 'Masbate', 190),
+    ('Luzon', 'Meycauayan', 190),
+    ('Luzon', 'Muñoz', 190),
+    ('Metro Manila', 'Muntinlupa', 155),
+    ('Luzon', 'Naga', 190),
+    ('Metro Manila', 'Navotas', 155),
+    ('Luzon', 'Olongapo', 190),
+    ('Metro Manila', 'Parañaque', 155),
+    ('Metro Manila', 'Pasay', 155),
+    ('Metro Manila', 'Pasig', 155),
+    ('Luzon', 'Puerto Princesa', 190),
+    ('Metro Manila', 'Quezon City', 155),
+    ('Luzon', 'San Carlos', 190),
+    ('Luzon', 'San Fernando La Union', 190),
+    ('Luzon', 'San Fernando Pampanga', 190),
+    ('Luzon', 'San Jose', 190),
+    ('Luzon', 'San Jose del Monte', 190),
+    ('Metro Manila', 'San Juan (San Juan del Monte)', 155),
+    ('Luzon', 'San Pablo', 190),
+    ('Luzon', 'San Pedro', 190),
+    ('Luzon', 'Santa Rosa', 190),
+    ('Luzon', 'Santiago', 190),
+    ('Luzon', 'Sorsogon', 190),
+    ('Luzon', 'Tabaco', 190),
+    ('Luzon', 'Tagaytay', 190),
+    ('Metro Manila', 'Taguig', 155), 
+    ('Luzon', 'Tarlac', 190),
+    ('Luzon', 'Tayabas', 190),
+    ('Luzon', 'Trece Martires', 190),
+    ('Luzon', 'Tuguegarao', 190),
+    ('Luzon', 'Urdaneta', 190),
+    ('Metro Manila', 'Valenzuela', 155),
+    ('Luzon', 'Vigan', 190),
+    ('Visayas', 'Bacolod', 200),
+    ('Visayas', 'Bago', 200),
+    ('Visayas', 'Bais', 200),
+    ('Visayas', 'Bayawan', 200),
+    ('Visayas', 'Baybay', 200),
+    ('Visayas', 'Bogo', 200),
+    ('Visayas', 'Borongan', 200),
+    ('Visayas', 'Cadiz', 200),
+    ('Visayas', 'Calbayog', 200),
+    ('Visayas', 'Canlaon', 200),
+    ('Visayas', 'Carcar', 200),
+    ('Visayas', 'Catbalogan', 200),
+    ('Visayas', 'Cebu', 200),
+    ('Visayas', 'Danao', 200),
+    ('Visayas', 'Dumaguete', 200),
+    ('Visayas', 'Escalante', 200),
+    ('Visayas', 'Guihulngan', 200),
+    ('Visayas', 'Himamaylan', 200),
+    ('Visayas', 'Iloilo', 200),
+    ('Visayas', 'Kabankalan', 200),
+    ('Visayas', 'La Carlota', 200),
+    ('Visayas', 'Maasin', 200),
+    ('Visayas', 'Naga', 200),
+    ('Visayas', 'Ormoc', 200),
+    ('Visayas', 'Sagay', 200),
+    ('Visayas', 'San Carlos', 200),
+    ('Visayas', 'Silay', 200),
+    ('Visayas', 'Sipalay', 200),
+    ('Visayas', 'Tacloban', 200),
+    ('Visayas', 'Tagbilaran', 200),
+    ('Visayas', 'Talisay Cebu', 200),
+    ('Visayas', 'Talisay  Negros Oriental', 200),
+    ('Visayas', 'Tanjay', 200),
+    ('Visayas', 'Toledo', 200),
+    ('Visayas', 'Victorias', 200),
+    ('Mindanao', 'Bayugan', 220),
+    ('Mindanao', 'Bislig', 220),
+    ('Mindanao', 'Butuan', 220),
+    ('Mindanao', 'Cabadbaran', 220),
+    ('Mindanao', 'Cagayan de Oro', 220),
+    ('Mindanao', 'Cotabato', 220),
+    ('Mindanao', 'Dapitan', 220),
+    ('Mindanao', 'Davao', 220),
+    ('Mindanao', 'Digos', 220),
+    ('Mindanao', 'El Salvador', 220),
+    ('Mindanao', 'Gingoog', 220),
+    ('Mindanao', 'Iligan', 220),
+    ('Mindanao', 'Isabela', 220),
+    ('Mindanao', 'Kidapawan', 220),
+    ('Mindanao', 'Koronadal', 220),
+    ('Mindanao', 'Lamitan', 220),
+    ('Mindanao', 'Malaybalay', 220),
+    ('Mindanao', 'Marawi', 220),
+    ('Mindanao', 'Mati', 220),
+    ('Mindanao', 'Oroquieta', 220),
+    ('Mindanao', 'Ozamis', 220),
+    ('Mindanao', 'Pagadian', 220),
+    ('Mindanao', 'Samal', 220),
+    ('Mindanao', 'Surigao', 220),
+    ('Mindanao', 'Tacurong', 220),
+    ('Mindanao', 'Tagum', 220),
+    ('Mindanao', 'Tangub', 220),
+    ('Mindanao', 'Valencia', 220),
+    ('Mindanao', 'Zamboanga', 220);
+
+    ('Metro Manila', '', 155),
+    ('Luzon', '', 190),
+    ('Visayas', '', 200);
+    ('Mindanao', '', 220),
+
+SELECT * FROM shipping_fee ORDER BY city;

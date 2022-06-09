@@ -1,0 +1,93 @@
+*{
+	margin: 0;
+	padding: 0;
+	font-family: 'nunito',sans-serif;
+	
+
+}
+body{
+	background-image:linear-gradient(rgba(4, 9, 30,0.7),rgba(4, 9, 30, 0.7)),url(../images/bg.jpg);
+	background-position: center;
+	background-repeat: no-repeat;
+	background-size: cover;
+}
+
+.container{
+	margin: 6% auto;
+	text-align: center;
+	color: #fff;
+	padding-top: 50px;
+	position: relative;
+}
+
+.signup_form_inner1 h2{
+	font-size: 31px;
+	margin-bottom: 3rem;
+}
+.info label{
+	font-size: 20px;
+}
+.info input{
+	border-radius: 10px;
+	padding-top: 10px;
+	padding-right: 120px;
+	font-size: 20px;
+	outline: none;
+	border-top: none;
+	border-left: none;
+	border-right: none;
+	border-bottom: 3px solid black;
+	margin-left: 12px;
+
+
+}
+.info1 input{
+	border-radius: 10px;
+	padding-top: 10px; 
+	padding-right: 180px;
+	font-size: 20px;
+	color: #555;
+		outline: none;
+	border-top: none;
+	border-left: none;
+	border-right: none;
+	border-bottom: 3px solid black;
+	margin-left: 12px;
+
+}
+.info2 select{
+	border-radius: 10px;
+	padding-top: 10px; 
+	padding-right: 230px;
+	outline: none;
+	font-size: 20px;
+	color: #555;
+	border-top: none;
+	border-left: none;
+	border-right: none;
+	border-bottom: 3px solid black;
+	margin-left: 12px;
+}
+.submit{
+	padding: 10px 40px;
+	font-size: 15px;
+	border-radius: 20px;
+	border: none;
+	cursor: pointer;
+	background-color: black;
+	color: #fff;
+	transition: 0.2s;
+}
+.submit:hover{
+	text-decoration: underline;
+}
+.submit:active{
+	opacity: 0.8;
+}
+.create-acc{
+text-decoration: none;
+color: #fff;
+}
+.create-acc:hover{
+	text-decoration: underline;
+}

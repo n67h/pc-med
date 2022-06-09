@@ -1,0 +1,43 @@
+/*footer*/
+.footer{
+    text-align: center ;
+    width: 100%;
+    padding-top: 30px 0;
+}
+.footer p{
+    color: #fff;
+}
+.footer h4{
+    margin-bottom: 25px;
+    margin-top: 20px;
+    font-weight: 600;
+    color: #fff;
+}
+.icons .fa{
+color: #fff;
+margin: 0 13px;
+cursor: pointer;
+padding: 18px 0;
+}
+.fa-heart-o{
+color: #fff;
+}
+
+
+.fa-heart-o{
+    color: #333;
+}
+.fa-facebook:hover{
+    color: blue;
+}
+.fa-twitter:hover{
+    color: blue;
+}
+.fa-instagram:hover{
+    color: #ff33cc;
+}
+.fa-linkedin:hover{
+    color: red;
+}
+
+

@@ -1,0 +1,60 @@
+html,body{
+  margin: 0;
+  padding: 0;
+  font-family:'Courier New', Courier, monospace;
+
+}
+body{
+  background: linear-gradient(50deg, rgb(39, 9, 47),rgb(6, 42, 43) );
+  background-repeat: no-repeat;
+  background-position: center;
+  height: 100vh;
+
+}
+
+.container{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+form{
+  margin-top: 10%;
+border: 3px solid rgba(254, 254, 254, 0.4);
+padding: 100px;
+border-radius: 10px;
+box-shadow: 0px 0px 30px rgba(254, 254, 254, 0.4);
+animation: all 5s infinite;
+}
+@keyframes all {
+  0%{box-shadow: 0px 0px 30px rgba(196, 217, 40, 0.4);}
+  50%{box-shadow: 0px 0px 30px rgba(146, 59, 168, 0.4);}
+  80%{box-shadow: 0px 0px 30px rgba(234, 20, 20, 0.4);}
+  90%{box-shadow: 0px 0px 30px rgba(0, 10, 100, 0.4);}
+  100%{box-shadow: 0px 0px 30px rgba(159, 2, 135, 0.4);}
+}
+form input{
+  width: 120%;
+  outline: none;
+  border-radius: 5px;
+  border: none;
+}
+
+input[type=text]:focus{
+  border-color: dodgerblue;
+  box-shadow: 0 0 10px 0 dodgerblue; 
+}
+input[type=password]:focus{
+  border-color: dodgerblue;
+  box-shadow: 0 0 10px 0 dodgerblue; 
+}
+p{
+  margin-top: 10px;
+  font-size: 50px;
+  color: antiquewhite;
+  font-weight: 400;
+  font-style:italic;
+}
+label{
+  color: antiquewhite;
+}

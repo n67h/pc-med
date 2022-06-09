@@ -1,0 +1,92 @@
+
+
+        table, th, td {
+            border: 6px solid #333;
+            border-collapse: collapse;
+            background-color: white;
+            padding: 8px;
+            animation: move 5s infinite;
+        }
+        @keyframes move{
+            50%{border: 6px solid lightblue;}
+            100%{border: 6px solid lightblue;}
+            
+        }
+
+        .home {
+            text-decoration: none;
+            color: black;
+            font-size:30px;
+        }
+
+        .home:hover {
+            color: black;
+            text-decoration:underline;
+        }
+        .add-user-open-button{
+            border: none;
+            padding: 20px;
+            margin-left:10px ;
+            border-radius: 5px;      
+            background-color: #0081CF;
+
+        }
+        .fa-user-circle-o{
+            font-size: 25px;
+            color: #fff;
+        }
+        .add-user-open-button:hover{
+                background: #2C73D2; 
+        }
+        dialog{
+          border: 1px solid rgba(255, 255, 255,0.3);
+          border-radius: 16px;
+          width: 20%;
+        }
+        select{
+            padding-top: 10px;
+            padding-bottom: 10px;
+            padding-right: 15%;
+            padding-left: 15%;
+            outline: none;
+            font-size: 20px;
+            border-radius: 16px;
+        }
+        #checkbox{
+            position: absolute;
+            margin-top: 10px;
+
+        }
+        button{
+            border: none;
+            outline: none;
+            background: #0081CF;
+            padding: 12px;
+            border-radius: 10px;
+            color: #fff;
+            cursor: pointer;
+            transition: 0.3s;
+            font-size: 15px;
+        }
+        button:hover{
+            background: #D2000B;
+        }
+        button:active{
+            opacity: 0.4;
+        }
+        .welcome{
+            font-size:20px;
+        }
+
+
+
+
+
+
+
+
+
+.add-category-modal::backdrop{
+  background: linear-gradient(45deg,red,blue);
+  opacity: 0.3;
+     }
